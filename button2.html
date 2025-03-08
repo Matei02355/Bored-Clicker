@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Random Button Game with Shop, Secret, & Cookie</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+
+    /* Score bar at the top */
+    #scorebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 20px;
+      z-index: 1;
+    }
+
+    /* Shop area below the score counter */
+    #shopArea {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    /* Shop buttons */
+    #shopButton,
+    #purchaseButton,
+    #buyCookie {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: blue;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin: 5px;
+    }
+
+    /* Hide purchase buttons initially */
+    #purchaseButton, 
+    #buyCookie {
+      display: none;
+    }
+
+    /* The red, round main game button */
+    #gameButton {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: red;
+      color: white;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      line-height: 80px;
+      z-index: 2;
+    }
+
+    /* Achievement display */
+    #achievement {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      display: none;
+      z-index: 3;
+    }
+
+    /* Secret code box in bottom-left corner */
+    #secretContainer {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      z-index: 4;
+    }
+    #secretContainer input,
+    #secretContainer button {
+      padding: 5px 10px;
+      font-size: 14px;
+      margin: 3px;
+    }
+    #secretButton {
+      display: none;
+      background-color: purple;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Cookie image in the upper-left corner (initially hidden) */
+    #cookieImage {
+      position: fixed;
+      top: 100px;
+      left: 20px;
+      width: 50px;    /* Make it small */
+      cursor: pointer;
+      display: none;  /* Only appears after purchase */
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Score bar -->
+  <div id="scorebar">Score: <span id="score">0</span></div>
+  
+  <!-- Shop area -->
+  <div id="shopArea">
+    <button id="shopButton">Shop</button>
+    <button id="purchaseButton">Buy Auto Click (20 clicks)</button>
+    <button id="buyCookie">Buy Cookie (100 clicks)</button>
+  </div>
+  
+  <!-- Main clickable button -->
+  <button id="gameButton">Click me</button>
+  
+  <!-- Achievement text -->
+  <div id="achievement">That's a lot of clicks!</div>
+  
+  <!-- Secret code container -->
+  <div id="secretContainer">
+    <input type="text" id="secretCode" placeholder="Enter secret code"/>
+    <button id="secretSubmit">Submit</button>
+    <button id="secretButton">Get 10000 Clicks</button>
+  </div>
+
+  <!-- Cookie image (place cookie.png in same folder) -->
+  <img id="cookieImage" src="cookie.png" alt="Cookie" />
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Score & game variables
+      let score = 0;
+      let autoClickers = 0;
+      let purchasePrice = 20; // initial price for auto-click upgrade
+      let cookiePurchased = false;
+      let lastCookieClick = 0; // Track cooldown for cookie
+
+      // DOM elements
+      const scoreDisplay = document.getElementById("score");
+      const button = document.getElementById("gameButton");
+      const achievement = document.getElementById("achievement");
+      const shopButton = document.getElementById("shopButton");
+      const purchaseButton = document.getElementById("purchaseButton");
+      const buyCookieButton = document.getElementById("buyCookie");
+      const cookieImage = document.getElementById("cookieImage");
+      
+      // Secret code elements
+      const secretCodeInput = document.getElementById("secretCode");
+      const secretSubmit = document.getElementById("secretSubmit");
+      const secretButton = document.getElementById("secretButton");
+
+      // Update the on-screen score
+      function updateScore() {
+        scoreDisplay.textContent = score;
+      }
+
+      // Update text on the auto-click purchase button
+      function updatePurchaseButtonText() {
+        purchaseButton.textContent = `Buy Auto Click (${purchasePrice} clicks)`;
+      }
+
+      // Move the main red button to a random location
+      function moveButton() {
+        const maxX = window.innerWidth - button.offsetWidth;
+        const maxY = window.innerHeight - button.offsetHeight - 40; // 40px for scorebar
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY + 40;
+        button.style.left = randomX + "px";
+        button.style.top = randomY + "px";
+      }
+
+      // Show achievement for 3 seconds
+      function showAchievement() {
+        achievement.style.display = "block";
+        setTimeout(() => {
+          achievement.style.display = "none";
+        }, 3000);
+      }
+
+      // MAIN BUTTON CLICK: Increase score, move button, check achievements
+      button.addEventListener("click", () => {
+        score++;
+        updateScore();
+        if (score % 25 === 0) {
+          showAchievement();
+        }
+        moveButton();
+      });
+
+      // SHOP BUTTON CLICK: Toggle display of shop items
+      shopButton.addEventListener("click", () => {
+        const isHidden = (purchaseButton.style.display === "none" || purchaseButton.style.display === "");
+        if (isHidden) {
+          purchaseButton.style.display = "inline-block";
+          buyCookieButton.style.display = "inline-block";
+        } else {
+          purchaseButton.style.display = "none";
+          buyCookieButton.style.display = "none";
+        }
+      });
+
+      // PURCHASE AUTO-CLICK
+      purchaseButton.addEventListener("click", () => {
+        if (score >= purchasePrice) {
+          score -= purchasePrice;
+          updateScore();
+          autoClickers++;
+          purchasePrice += 5; // Price goes up by 5 each time
+          updatePurchaseButtonText();
+          alert(`Auto Clicker purchased! You now get ${autoClickers} click(s) every 10 seconds.`);
+        } else {
+          alert("Not enough clicks to purchase!");
+        }
+      });
+
+      // BUY COOKIE: costs 100 clicks, shows cookie image in top-left
+      buyCookieButton.addEventListener("click", () => {
+        if (!cookiePurchased && score >= 100) {
+          score -= 100;
+          updateScore();
+          cookiePurchased = true;
+          cookieImage.style.display = "block";
+          alert("Cookie purchased! Click it every 5 seconds for +5 clicks.");
+        } else if (cookiePurchased) {
+          alert("You already own the cookie!");
+        } else {
+          alert("Not enough clicks to purchase the cookie!");
+        }
+      });
+
+      // CLICKING THE COOKIE: +5 clicks if at least 5s have passed
+      cookieImage.addEventListener("click", () => {
+        const now = Date.now();
+        if (now - lastCookieClick >= 5000) {
+          score += 5;
+          updateScore();
+          lastCookieClick = now;
+        } else {
+          alert("Cookie is on cooldown! Wait a bit longer.");
+        }
+      });
+
+      // AUTO-CLICK: every 10 seconds, add autoClickers to score
+      setInterval(() => {
+        if (autoClickers > 0) {
+          score += autoClickers;
+          updateScore();
+        }
+      }, 10000);
+
+      // SECRET CODE SUBMISSION
+      secretSubmit.addEventListener("click", () => {
+        if (secretCodeInput.value === "Matei213456") {
+          secretButton.style.display = "inline-block";
+          alert("Secret unlocked! Click the new button to get 10000 clicks.");
+          secretCodeInput.disabled = true;
+          secretSubmit.disabled = true;
+        } else {
+          alert("Incorrect code. Try again!");
+        }
+      });
+
+      // SECRET BUTTON: +10000 clicks
+      secretButton.addEventListener("click", () => {
+        score += 10000;
+        updateScore();
+      });
+
+      // Initialize the button position & purchase button text
+      moveButton();
+      updatePurchaseButtonText();
+    });
+  </script>
+</body>
+</html>
