@@ -1,300 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Random Button Game with Shop, Secret, & Cookie</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-    }
-
-    /* Score bar at the top */
-    #scorebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      font-size: 20px;
-      z-index: 1;
-    }
-
-    /* Shop area below the score counter */
-    #shopArea {
-      position: fixed;
-      top: 60px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-    }
-
-    /* Shop buttons */
-    #shopButton,
-    #purchaseButton,
-    #buyCookie {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: blue;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin: 5px;
-    }
-
-    /* Hide purchase buttons initially */
-    #purchaseButton, 
-    #buyCookie {
-      display: none;
-    }
-
-    /* The red, round main game button */
-    #gameButton {
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background-color: red;
-      color: white;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      line-height: 80px;
-      z-index: 2;
-    }
-
-    /* Achievement display */
-    #achievement {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #28a745;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 8px;
-      font-size: 16px;
-      display: none;
-      z-index: 3;
-    }
-
-    /* Secret code box in bottom-left corner */
-    #secretContainer {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #fff;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      z-index: 4;
-    }
-    #secretContainer input,
-    #secretContainer button {
-      padding: 5px 10px;
-      font-size: 14px;
-      margin: 3px;
-    }
-    #secretButton {
-      display: none;
-      background-color: purple;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    /* Cookie image in the upper-left corner (initially hidden) */
-    #cookieImage {
-      position: fixed;
-      top: 100px;
-      left: 20px;
-      width: 50px;    /* Make it small */
-      cursor: pointer;
-      display: none;  /* Only appears after purchase */
-      z-index: 5;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background-color: #f4f4f4;
+        }
+        #clickCounter {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #note {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+            color: #888;
+        }
+        .click-button {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #ffcc00;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            line-height: 80px;
+        }
+        .shop-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .shop-header {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .tab {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            background: #eee;
+        }
+        .tab.active {
+            background: white;
+            border-bottom: 2px solid black;
+        }
+        .upgrade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .upgrade-item button {
+            background: #eee;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #achievement {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        #codeInputContainer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        #codeInputContainer input {
+            padding: 5px;
+        }
+        #codeInputContainer button {
+            margin-top: 5px;
+            padding: 5px 10px;
+            background-color: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #secretCodeButton {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #ff5733;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #getClicksButton {
+            position: absolute;
+            bottom: 100%; /* Position above the text box */
+            left: 0;
+            width: 100%;
+            background-color: #ff5733;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
+        #toggleShopButton {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #saveLoadContainer {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        #saveButton, #loadButton {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #colorPickerButton {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #colorMenu {
+            position: fixed;
+            top: 70px; /* Position below the "Change Color" button */
+            left: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .colorOption {
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <!-- Score bar -->
-  <div id="scorebar">Score: <span id="score">0</span></div>
-  
-  <!-- Shop area -->
-  <div id="shopArea">
-    <button id="shopButton">Shop</button>
-    <button id="purchaseButton">Buy Auto Click (20 clicks)</button>
-    <button id="buyCookie">Buy Cookie (100 clicks)</button>
-  </div>
-  
-  <!-- Main clickable button -->
-  <button id="gameButton">Click me</button>
-  
-  <!-- Achievement text -->
-  <div id="achievement">That's a lot of clicks!</div>
-  
-  <!-- Secret code container -->
-  <div id="secretContainer">
-    <input type="text" id="secretCode" placeholder="Enter secret code"/>
-    <button id="secretSubmit">Submit</button>
-    <button id="secretButton">Get 10000 Clicks</button>
-  </div>
+    <div id="clickCounter">Clicks: 0</div>
+    <button id="gameButton" class="click-button" onclick="addClick()">Click Me!</button>
 
-  <!-- Cookie image (place cookie.png in same folder) -->
-  <img id="cookieImage" src="cookie.png" alt="Cookie" />
+    <!-- Change Color Button -->
+    <button id="colorPickerButton" onclick="toggleColorMenu()">Change Color</button>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Score & game variables
-      let score = 0;
-      let autoClickers = 0;
-      let purchasePrice = 20; // initial price for auto-click upgrade
-      let cookiePurchased = false;
-      let lastCookieClick = 0; // Track cooldown for cookie
+    <!-- Color Menu -->
+    <div id="colorMenu">
+        <div class="colorOption" style="background-color: #ffcc00;" onclick="changeColor('#ffcc00')"></div>
+        <div class="colorOption" style="background-color: #ff5733;" onclick="changeColor('#ff5733')"></div>
+        <div class="colorOption" style="background-color: #4CAF50;" onclick="changeColor('#4CAF50')"></div>
+        <div class="colorOption" style="background-color: #007bff;" onclick="changeColor('#007bff')"></div>
+        <div class="colorOption" style="background-color: #28a745;" onclick="changeColor('#28a745')"></div>
+        <div class="colorOption" style="background-color: #ffcc00;" onclick="changeColor('#ffcc00')"></div>
+    </div>
 
-      // DOM elements
-      const scoreDisplay = document.getElementById("score");
-      const button = document.getElementById("gameButton");
-      const achievement = document.getElementById("achievement");
-      const shopButton = document.getElementById("shopButton");
-      const purchaseButton = document.getElementById("purchaseButton");
-      const buyCookieButton = document.getElementById("buyCookie");
-      const cookieImage = document.getElementById("cookieImage");
-      
-      // Secret code elements
-      const secretCodeInput = document.getElementById("secretCode");
-      const secretSubmit = document.getElementById("secretSubmit");
-      const secretButton = document.getElementById("secretButton");
+    <!-- Toggle Shop Button -->
+    <button id="toggleShopButton" onclick="toggleShop()">Toggle Shop</button>
 
-      // Update the on-screen score
-      function updateScore() {
-        scoreDisplay.textContent = score;
-      }
+    <!-- Shop UI (Initially visible) -->
+    <div class="shop-container" id="shopContainer">
+        <div class="shop-header">🛍️ Shop</div>
+        <p>Spend your clicks to upgrade your production</p>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('upgrades')">Upgrades</div>
+            <div class="tab" onclick="showTab('buildings')">Buildings</div>
+        </div>
+        <div id="upgrades">
+            <div class="upgrade-item">
+                🎯 Auto Clicker
+                <button onclick="buyAutoClicker()">Buy for <span id="autoClickerCost">25</span> Clicks</button>
+            </div>
+        </div>
+        <div id="buildings" style="display:none;">Coming Soon...</div>
+    </div>
 
-      // Update text on the auto-click purchase button
-      function updatePurchaseButtonText() {
-        purchaseButton.textContent = `Buy Auto Click (${purchasePrice} clicks)`;
-      }
+    <div id="achievement">🎉 That's a lot of clicks!</div>
 
-      // Move the main red button to a random location
-      function moveButton() {
-        const maxX = window.innerWidth - button.offsetWidth;
-        const maxY = window.innerHeight - button.offsetHeight - 40; // 40px for scorebar
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY + 40;
-        button.style.left = randomX + "px";
-        button.style.top = randomY + "px";
-      }
+    <div id="codeInputContainer">
+        <input type="text" id="codeInput" placeholder="Enter code">
+        <button onclick="checkCode()">Submit Code</button>
+        <!-- Get 10k clicks button (positioned above the text box) -->
+        <button id="getClicksButton" onclick="give10kClicks()">Get 10,000 Clicks</button>
+    </div>
 
-      // Show achievement for 3 seconds
-      function showAchievement() {
-        achievement.style.display = "block";
-        setTimeout(() => {
-          achievement.style.display = "none";
-        }, 3000);
-      }
+    <!-- Save/Load Buttons -->
+    <div id="saveLoadContainer">
+        <button id="saveButton" onclick="downloadSave()">Download Save</button>
+        <input type="file" id="loadInput" style="display:none" onchange="loadSave(event)">
+        <button id="loadButton" onclick="document.getElementById('loadInput').click()">Load Save</button>
+    </div>
 
-      // MAIN BUTTON CLICK: Increase score, move button, check achievements
-      button.addEventListener("click", () => {
-        score++;
-        updateScore();
-        if (score % 25 === 0) {
-          showAchievement();
+    <!-- Note under the Click Counter -->
+    <div id="note">If you don't see the click button, toggle off the shop.</div>
+
+    <script>
+        let clicks = 0;
+        let clickPower = 1;
+        let autoClick = 0;
+        let gameButton = document.getElementById("gameButton");
+
+        // Auto clicker cost starts at 25
+        let autoClickerCost = 25;
+        let autoClickInterval = null;
+
+        // List of achievements
+        const achievements = [
+            "Just keep clicking",
+            "Click Click Click",
+            "I don't know what to put here",
+            "That's a lot of clicks",
+            "Ty for playing my game Click",
+            "Clicking so more",
+            "Why are you playing this game?",
+            "What's your favorite ball color?",
+            "How did you find this game? Just curious",
+            "Give me more suggestions in the Discord (when I make it)",
+            "Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click"
+        ];
+
+        function addClick() {
+            clicks += clickPower;
+            updateCounter();
+            moveButton();
+            checkAchievement();
         }
-        moveButton();
-      });
 
-      // SHOP BUTTON CLICK: Toggle display of shop items
-      shopButton.addEventListener("click", () => {
-        const isHidden = (purchaseButton.style.display === "none" || purchaseButton.style.display === "");
-        if (isHidden) {
-          purchaseButton.style.display = "inline-block";
-          buyCookieButton.style.display = "inline-block";
-        } else {
-          purchaseButton.style.display = "none";
-          buyCookieButton.style.display = "none";
+        function updateCounter() {
+            document.getElementById("clickCounter").innerText = "Clicks: " + clicks;
         }
-      });
 
-      // PURCHASE AUTO-CLICK
-      purchaseButton.addEventListener("click", () => {
-        if (score >= purchasePrice) {
-          score -= purchasePrice;
-          updateScore();
-          autoClickers++;
-          purchasePrice += 5; // Price goes up by 5 each time
-          updatePurchaseButtonText();
-          alert(`Auto Clicker purchased! You now get ${autoClickers} click(s) every 10 seconds.`);
-        } else {
-          alert("Not enough clicks to purchase!");
+        function moveButton() {
+            const maxX = window.innerWidth - gameButton.offsetWidth;
+            const maxY = window.innerHeight - gameButton.offsetHeight;
+
+            // Define the boundaries for the Save/Load UI
+            const saveLoadContainer = document.getElementById("saveLoadContainer");
+            const saveLoadRect = saveLoadContainer.getBoundingClientRect();
+
+            let newX, newY;
+
+            // Ensure the button doesn't overlap with the Save/Load UI
+            do {
+                newX = Math.random() * maxX;
+                newY = Math.random() * maxY;
+            } while (
+                newX + gameButton.offsetWidth > saveLoadRect.left &&
+                newX < saveLoadRect.right &&
+                newY + gameButton.offsetHeight > saveLoadRect.top &&
+                newY < saveLoadRect.bottom
+            );
+
+            gameButton.style.left = newX + "px";
+            gameButton.style.top = newY + "px";
         }
-      });
 
-      // BUY COOKIE: costs 100 clicks, shows cookie image in top-left
-      buyCookieButton.addEventListener("click", () => {
-        if (!cookiePurchased && score >= 100) {
-          score -= 100;
-          updateScore();
-          cookiePurchased = true;
-          cookieImage.style.display = "block";
-          alert("Cookie purchased! Click it every 5 seconds for +5 clicks.");
-        } else if (cookiePurchased) {
-          alert("You already own the cookie!");
-        } else {
-          alert("Not enough clicks to purchase the cookie!");
+        function checkAchievement() {
+            if (clicks % 100 === 0 && clicks > 0) {
+                const achievementIndex = Math.floor(clicks / 100) - 1;
+                if (achievementIndex < achievements.length) {
+                    showAchievement(achievements[achievementIndex]);
+                }
+            }
         }
-      });
 
-      // CLICKING THE COOKIE: +5 clicks if at least 5s have passed
-      cookieImage.addEventListener("click", () => {
-        const now = Date.now();
-        if (now - lastCookieClick >= 5000) {
-          score += 5;
-          updateScore();
-          lastCookieClick = now;
-        } else {
-          alert("Cookie is on cooldown! Wait a bit longer.");
+        function showAchievement(message) {
+            const achievementElement = document.getElementById("achievement");
+            achievementElement.innerText = message;
+            achievementElement.style.display = "block";
+            setTimeout(() => {
+                achievementElement.style.display = "none";
+            }, 3000);
         }
-      });
 
-      // AUTO-CLICK: every 10 seconds, add autoClickers to score
-      setInterval(() => {
-        if (autoClickers > 0) {
-          score += autoClickers;
-          updateScore();
+        function toggleShop() {
+            const shopContainer = document.getElementById("shopContainer");
+            if (shopContainer.style.display === "none") {
+                shopContainer.style.display = "block";
+            } else {
+                shopContainer.style.display = "none";
+            }
         }
-      }, 10000);
 
-      // SECRET CODE SUBMISSION
-      secretSubmit.addEventListener("click", () => {
-        if (secretCodeInput.value === "Matei213456") {
-          secretButton.style.display = "inline-block";
-          alert("Secret unlocked! Click the new button to get 10000 clicks.");
-          secretCodeInput.disabled = true;
-          secretSubmit.disabled = true;
-        } else {
-          alert("Incorrect code. Try again!");
+        function showTab(tab) {
+            document.getElementById("upgrades").style.display = tab === "upgrades" ? "block" : "none";
+            document.getElementById("buildings").style.display = tab === "buildings" ? "block" : "none";
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            event.target.classList.add("active");
         }
-      });
 
-      // SECRET BUTTON: +10000 clicks
-      secretButton.addEventListener("click", () => {
-        score += 10000;
-        updateScore();
-      });
+        function buyAutoClicker() {
+            if (clicks >= autoClickerCost) {
+                clicks -= autoClickerCost;
+                autoClick += 1;
+                autoClickerCost += 25;
+                document.getElementById("autoClickerCost").innerText = autoClickerCost;
+                updateCounter();
+                startAutoClick();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
 
-      // Initialize the button position & purchase button text
-      moveButton();
-      updatePurchaseButtonText();
-    });
-  </script>
+        function startAutoClick() {
+            if (autoClickInterval) {
+                clearInterval(autoClickInterval);
+            }
+            autoClickInterval = setInterval(() => {
+                clicks += autoClick;
+                updateCounter();
+            }, 5000);
+        }
+
+        function checkCode() {
+            const codeInput = document.getElementById("codeInput").value;
+            if (codeInput === "Matei213456") {
+                document.getElementById("getClicksButton").style.display = "block";
+            } else {
+                alert("Invalid code!");
+            }
+        }
+
+        function give10kClicks() {
+            clicks += 10000;
+            updateCounter();
+        }
+
+        // Toggle color menu visibility
+        function toggleColorMenu() {
+            const colorMenu = document.getElementById("colorMenu");
+            colorMenu.style.display = colorMenu.style.display === "none" ? "block" : "none";
+        }
+
+        // Change the color of the click button
+        function changeColor(color) {
+            document.getElementById("gameButton").style.backgroundColor = color;
+        }
+
+        // Encrypt data using Base64 encoding
+        function encryptData(data) {
+            return btoa(JSON.stringify(data));
+        }
+
+        // Decrypt data using Base64 decoding
+        function decryptData(data) {
+            return JSON.parse(atob(data));
+        }
+
+        // Save the game state to a file (encrypted)
+        function downloadSave() {
+            const saveData = {
+                clicks: clicks,
+                autoClickerCost: autoClickerCost,
+                autoClick: autoClick
+            };
+            const encryptedData = encryptData(saveData);
+            const blob = new Blob([encryptedData], { type: "application/octet-stream" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "clicker_game_save.enc";
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load the game state from a file (decrypted)
+        function loadSave(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const encryptedData = e.target.result;
+                const saveData = decryptData(encryptedData);
+                clicks = saveData.clicks;
+                autoClickerCost = saveData.autoClickerCost;
+                autoClick = saveData.autoClick;
+                updateCounter();
+            };
+            reader.readAsText(file);
+        }
+    </script>
 </body>
 </html>
