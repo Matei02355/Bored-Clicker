@@ -5,29 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Clicker Game</title>
     <style>
-        /* General Styles */
         body {
             font-family: Arial, sans-serif;
+            overflow: hidden;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            overflow: hidden;
         }
-
         #clickCounter {
-            font-size: 2rem;
+            font-size: 24px;
             text-align: center;
             margin-top: 20px;
-            color: #333;
         }
-
         #note {
-            font-size: 0.9rem;
+            font-size: 14px;
             text-align: center;
             margin-top: 10px;
             color: #888;
         }
-
         .click-button {
             position: absolute;
             width: 120px;
@@ -35,15 +30,13 @@
             border-radius: 50%;
             background-color: #ffcc00;
             border: none;
-            font-size: 1.2rem;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             text-align: center;
             line-height: 120px;
             touch-action: manipulation; /* Prevent double-tap zoom */
         }
-
-        /* Shop Container */
         .shop-container {
             position: fixed;
             top: 20px;
@@ -57,21 +50,18 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-
         .shop-header {
-            font-size: 1.5rem;
+            font-size: 20px;
             font-weight: bold;
             display: flex;
             align-items: center;
             margin-bottom: 10px;
         }
-
         .tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
         }
-
         .tab {
             flex: 1;
             padding: 8px;
@@ -79,14 +69,11 @@
             cursor: pointer;
             border-radius: 5px;
             background: #eee;
-            font-size: 0.9rem;
         }
-
         .tab.active {
             background: white;
             border-bottom: 2px solid black;
         }
-
         .upgrade-item {
             display: flex;
             flex-direction: column;
@@ -95,25 +82,20 @@
             padding: 10px;
             border-bottom: 1px solid #ddd;
         }
-
         .upgrade-item button {
             background: #eee;
             border: none;
-            padding: 8px 12px;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
             align-self: flex-end;
-            font-size: 0.9rem;
         }
-
         .upgrade-item .description {
-            font-size: 0.8rem;
+            font-size: 12px;
             color: #666;
             margin-top: 5px;
             margin-bottom: 10px;
         }
-
-        /* Achievement Popup */
         #achievement {
             position: fixed;
             bottom: 20px;
@@ -123,10 +105,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             display: none;
-            font-size: 0.9rem;
         }
-
-        /* Code Input Container */
         #codeInputContainer {
             position: fixed;
             bottom: 20px;
@@ -138,26 +117,55 @@
             width: 90%;
             max-width: 300px;
         }
-
         #codeInputContainer input {
             padding: 5px;
             width: 100%;
             box-sizing: border-box;
-            font-size: 1rem;
+            font-size: 16px;
         }
-
         #codeInputContainer button {
             margin-top: 5px;
-            padding: 8px 12px;
+            padding: 5px 10px;
             background-color: #ffcc00;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
-            font-size: 1rem;
+            font-size: 16px;
         }
-
-        /* Save/Load Buttons */
+        #secretCodeButton {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #ff5733;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #getClicksButton {
+            position: absolute;
+            bottom: 100%; /* Position above the text box */
+            left: 0;
+            width: 100%;
+            background-color: #ff5733;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
+        #toggleShopButton {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
         #saveLoadContainer {
             position: fixed;
             bottom: 120px;
@@ -168,7 +176,6 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-
         #saveButton, #loadButton {
             padding: 10px 20px;
             background-color: #28a745;
@@ -176,10 +183,8 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 16px;
         }
-
-        /* Color Picker */
         #colorPickerButton {
             position: fixed;
             top: 20px;
@@ -190,12 +195,11 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 16px;
         }
-
         #colorMenu {
             position: fixed;
-            top: 70px;
+            top: 70px; /* Position below the "Change Color" button */
             left: 20px;
             background: white;
             padding: 10px;
@@ -203,7 +207,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             display: none;
         }
-
         .colorOption {
             width: 30px;
             height: 30px;
@@ -219,29 +222,24 @@
                 width: 100px;
                 height: 100px;
                 line-height: 100px;
-                font-size: 1rem;
+                font-size: 16px;
             }
-
             #toggleShopButton {
                 bottom: 80px;
-                font-size: 0.9rem;
+                font-size: 14px;
                 padding: 8px 16px;
             }
-
             #saveLoadContainer {
                 bottom: 150px;
             }
-
             #saveButton, #loadButton {
-                font-size: 0.9rem;
+                font-size: 14px;
                 padding: 8px 16px;
             }
-
             #colorPickerButton {
-                font-size: 0.9rem;
+                font-size: 14px;
                 padding: 8px 16px;
             }
-
             #codeInputContainer {
                 bottom: 10px;
                 left: 10px;
@@ -265,12 +263,13 @@
         <div class="colorOption" style="background-color: #4CAF50;" onclick="changeColor('#4CAF50')"></div>
         <div class="colorOption" style="background-color: #007bff;" onclick="changeColor('#007bff')"></div>
         <div class="colorOption" style="background-color: #28a745;" onclick="changeColor('#28a745')"></div>
+        <div class="colorOption" style="background-color: #ffcc00;" onclick="changeColor('#ffcc00')"></div>
     </div>
 
     <!-- Toggle Shop Button -->
     <button id="toggleShopButton" onclick="toggleShop()">Toggle Shop</button>
 
-    <!-- Shop UI -->
+    <!-- Shop UI (Initially visible) -->
     <div class="shop-container" id="shopContainer">
         <div class="shop-header">🛍️ Shop</div>
         <p>Spend your clicks to upgrade your production</p>
@@ -294,6 +293,21 @@
                 <div class="description">Multiplies your total clicks per click.</div>
                 <button onclick="buyClickMultiplier()">Buy for <span id="clickMultiplierCost">100</span> Clicks</button>
             </div>
+            <div class="upgrade-item">
+                🕒 Time Warp (2x Clicks for 30s)
+                <div class="description">Doubles your click power for 30 seconds.</div>
+                <button onclick="buyTimeWarp()">Buy for <span id="timeWarpCost">200</span> Clicks</button>
+            </div>
+            <div class="upgrade-item">
+                🎁 Lucky Click (Random Bonus)
+                <div class="description">Gives you a random bonus of up to 1000 clicks.</div>
+                <button onclick="buyLuckyClick()">Buy for <span id="luckyClickCost">150</span> Clicks</button>
+            </div>
+            <div class="upgrade-item">
+                🛡️ Click Shield (Prevent Negative Clicks)
+                <div class="description">Prevents negative clicks from random events.</div>
+                <button onclick="buyClickShield()">Buy for <span id="clickShieldCost">300</span> Clicks</button>
+            </div>
         </div>
         <div id="buildings" style="display:none;">
             <div class="upgrade-item">
@@ -314,13 +328,13 @@
         </div>
     </div>
 
-    <!-- Achievement Popup -->
     <div id="achievement">🎉 That's a lot of clicks!</div>
 
-    <!-- Code Input Container -->
     <div id="codeInputContainer">
         <input type="text" id="codeInput" placeholder="Enter code">
         <button onclick="checkCode()">Submit Code</button>
+        <!-- Get 10k clicks button (positioned above the text box) -->
+        <button id="getClicksButton" onclick="give10kClicks()">Get 10,000 Clicks</button>
     </div>
 
     <!-- Save/Load Buttons -->
@@ -334,7 +348,354 @@
     <div id="note">If you don't see the click button, toggle off the shop.</div>
 
     <script>
-        // JavaScript code remains the same as in the previous version.
+        let clicks = 0;
+        let clickPower = 1;
+        let autoClick = 0;
+        let gameButton = document.getElementById("gameButton");
+
+        // Auto clicker cost starts at 25
+        let autoClickerCost = 25;
+        let autoClickInterval = null;
+
+        // Click Power cost starts at 50
+        let clickPowerCost = 50;
+
+        // Click Multiplier cost starts at 100
+        let clickMultiplierCost = 100;
+        let clickMultiplier = 1;
+
+        // Time Warp cost starts at 200
+        let timeWarpCost = 200;
+
+        // Lucky Click cost starts at 150
+        let luckyClickCost = 150;
+
+        // Click Shield cost starts at 300
+        let clickShieldCost = 300;
+        let clickShieldActive = false;
+
+        // Buildings costs
+        let factoryCost = 500;
+        let bankCost = 1000;
+        let farmCost = 750;
+
+        // List of achievements
+        const achievements = [
+            "Just keep clicking",
+            "Click Click Click",
+            "I don't know what to put here",
+            "That's a lot of clicks",
+            "Ty for playing my game Click",
+            "Clicking so more",
+            "Why are you playing this game?",
+            "What's your favorite ball color?",
+            "How did you find this game? Just curious",
+            "Give me more suggestions in the Discord (when I make it)",
+            "Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click Click"
+        ];
+
+        // Secret codes
+        const secretCodes = {
+            "Matei213456": () => {
+                document.getElementById("getClicksButton").style.display = "block";
+            },
+            "spinningcat": () => {
+                alert("You found a secret cat! 🐱");
+            },
+            "moreclicks": () => {
+                clicks += 5000;
+                updateCounter();
+            },
+            "rainbow": () => {
+                setInterval(() => {
+                    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+                    document.getElementById("gameButton").style.backgroundColor = randomColor;
+                }, 500);
+            }
+        };
+
+        function addClick() {
+            let bonus = 0;
+            if (Math.random() < 0.1) { // 10% chance for a lucky click
+                bonus = Math.floor(Math.random() * 100);
+            }
+            clicks += clickPower * clickMultiplier + bonus;
+            updateCounter();
+            moveButton();
+            checkAchievement();
+        }
+
+        function updateCounter() {
+            document.getElementById("clickCounter").innerText = "Clicks: " + clicks;
+        }
+
+        function moveButton() {
+            const maxX = window.innerWidth - gameButton.offsetWidth;
+            const maxY = window.innerHeight - gameButton.offsetHeight;
+
+            // Define the boundaries for the Save/Load UI
+            const saveLoadContainer = document.getElementById("saveLoadContainer");
+            const saveLoadRect = saveLoadContainer.getBoundingClientRect();
+
+            let newX, newY;
+
+            // Ensure the button doesn't overlap with the Save/Load UI
+            do {
+                newX = Math.random() * maxX;
+                newY = Math.random() * maxY;
+            } while (
+                newX + gameButton.offsetWidth > saveLoadRect.left &&
+                newX < saveLoadRect.right &&
+                newY + gameButton.offsetHeight > saveLoadRect.top &&
+                newY < saveLoadRect.bottom
+            );
+
+            gameButton.style.left = newX + "px";
+            gameButton.style.top = newY + "px";
+        }
+
+        function checkAchievement() {
+            if (clicks % 100 === 0 && clicks > 0) {
+                const achievementIndex = Math.floor(clicks / 100) - 1;
+                if (achievementIndex < achievements.length) {
+                    showAchievement(achievements[achievementIndex]);
+                }
+            }
+        }
+
+        function showAchievement(message) {
+            const achievementElement = document.getElementById("achievement");
+            achievementElement.innerText = message;
+            achievementElement.style.display = "block";
+            setTimeout(() => {
+                achievementElement.style.display = "none";
+            }, 3000);
+        }
+
+        function toggleShop() {
+            const shopContainer = document.getElementById("shopContainer");
+            if (shopContainer.style.display === "none") {
+                shopContainer.style.display = "block";
+            } else {
+                shopContainer.style.display = "none";
+            }
+        }
+
+        function showTab(tab) {
+            document.getElementById("upgrades").style.display = tab === "upgrades" ? "block" : "none";
+            document.getElementById("buildings").style.display = tab === "buildings" ? "block" : "none";
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            event.target.classList.add("active");
+        }
+
+        function buyAutoClicker() {
+            if (clicks >= autoClickerCost) {
+                clicks -= autoClickerCost;
+                autoClick += 1;
+                autoClickerCost += 25;
+                document.getElementById("autoClickerCost").innerText = autoClickerCost;
+                updateCounter();
+                startAutoClick();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyClickPower() {
+            if (clicks >= clickPowerCost) {
+                clicks -= clickPowerCost;
+                clickPower += 1;
+                clickPowerCost += 50;
+                document.getElementById("clickPowerCost").innerText = clickPowerCost;
+                updateCounter();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyClickMultiplier() {
+            if (clicks >= clickMultiplierCost) {
+                clicks -= clickMultiplierCost;
+                clickMultiplier += 1;
+                clickMultiplierCost += 100;
+                document.getElementById("clickMultiplierCost").innerText = clickMultiplierCost;
+                updateCounter();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyTimeWarp() {
+            if (clicks >= timeWarpCost) {
+                clicks -= timeWarpCost;
+                const originalClickPower = clickPower;
+                clickPower *= 2;
+                setTimeout(() => {
+                    clickPower = originalClickPower;
+                }, 30000); // 30 seconds
+                updateCounter();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyLuckyClick() {
+            if (clicks >= luckyClickCost) {
+                clicks -= luckyClickCost;
+                const bonus = Math.floor(Math.random() * 1000);
+                clicks += bonus;
+                updateCounter();
+                alert(`You got a bonus of ${bonus} clicks!`);
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyClickShield() {
+            if (clicks >= clickShieldCost) {
+                clicks -= clickShieldCost;
+                clickShieldActive = true;
+                updateCounter();
+                alert("Click Shield activated! No negative clicks for you!");
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyFactory() {
+            if (clicks >= factoryCost) {
+                clicks -= factoryCost;
+                autoClick += 5;
+                updateCounter();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyBank() {
+            if (clicks >= bankCost) {
+                clicks -= bankCost;
+                setInterval(() => {
+                    clicks += 10;
+                    updateCounter();
+                }, 10000); // 10 seconds
+                updateCounter();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function buyFarm() {
+            if (clicks >= farmCost) {
+                clicks -= farmCost;
+                setInterval(() => {
+                    clicks += 5;
+                    updateCounter();
+                }, 5000); // 5 seconds
+                updateCounter();
+            } else {
+                alert("Not enough clicks!");
+            }
+        }
+
+        function startAutoClick() {
+            if (autoClickInterval) {
+                clearInterval(autoClickInterval);
+            }
+            autoClickInterval = setInterval(() => {
+                clicks += autoClick;
+                updateCounter();
+            }, 5000);
+        }
+
+        function checkCode() {
+            const codeInput = document.getElementById("codeInput").value;
+            if (secretCodes[codeInput]) {
+                secretCodes[codeInput]();
+            } else {
+                alert("Invalid code!");
+            }
+        }
+
+        function give10kClicks() {
+            clicks += 10000;
+            updateCounter();
+        }
+
+        // Toggle color menu visibility
+        function toggleColorMenu() {
+            const colorMenu = document.getElementById("colorMenu");
+            colorMenu.style.display = colorMenu.style.display === "none" ? "block" : "none";
+        }
+
+        // Change the color of the click button
+        function changeColor(color) {
+            document.getElementById("gameButton").style.backgroundColor = color;
+        }
+
+        // Encrypt data using Base64 encoding
+        function encryptData(data) {
+            return btoa(JSON.stringify(data));
+        }
+
+        // Decrypt data using Base64 decoding
+        function decryptData(data) {
+            return JSON.parse(atob(data));
+        }
+
+        // Save the game state to a file (encrypted)
+        function downloadSave() {
+            const saveData = {
+                clicks: clicks,
+                autoClickerCost: autoClickerCost,
+                autoClick: autoClick,
+                clickPower: clickPower,
+                clickPowerCost: clickPowerCost,
+                clickMultiplier: clickMultiplier,
+                clickMultiplierCost: clickMultiplierCost,
+                timeWarpCost: timeWarpCost,
+                luckyClickCost: luckyClickCost,
+                clickShieldCost: clickShieldCost,
+                clickShieldActive: clickShieldActive,
+                factoryCost: factoryCost,
+                bankCost: bankCost,
+                farmCost: farmCost
+            };
+            const encryptedData = encryptData(saveData);
+            const blob = new Blob([encryptedData], { type: "application/octet-stream" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "clicker_game_save.enc";
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load the game state from a file (decrypted)
+        function loadSave(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const encryptedData = e.target.result;
+                const saveData = decryptData(encryptedData);
+                clicks = saveData.clicks;
+                autoClickerCost = saveData.autoClickerCost;
+                autoClick = saveData.autoClick;
+                clickPower = saveData.clickPower;
+                clickPowerCost = saveData.clickPowerCost;
+                clickMultiplier = saveData.clickMultiplier;
+                clickMultiplierCost = saveData.clickMultiplierCost;
+                timeWarpCost = saveData.timeWarpCost;
+                luckyClickCost = saveData.luckyClickCost;
+                clickShieldCost = saveData.clickShieldCost;
+                clickShieldActive = saveData.clickShieldActive;
+                factoryCost = saveData.factoryCost;
+                bankCost = saveData.bankCost;
+                farmCost = saveData.farmCost;
+                updateCounter();
+            };
+            reader.readAsText(file);
+        }
     </script>
 </body>
 </html>
