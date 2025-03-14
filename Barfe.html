@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barfe.com</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .hidden { display: none; }
+        .argument { border: 1px solid #ccc; padding: 10px; margin: 10px 0; cursor: pointer; }
+        .replies { margin-top: 10px; padding-left: 20px; border-left: 2px solid #ccc; }
+        #user-display { position: absolute; top: 10px; right: 10px; font-weight: bold; cursor: pointer; }
+        #logout-btn { display: none; position: absolute; top: 40px; right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Barfe.com</h1>
+    <div id="user-display" class="hidden" onclick="toggleLogout()"></div>
+    <button id="logout-btn" onclick="logout()">Log Out</button>
+    <div id="login">
+        <input type="text" id="username" placeholder="Enter your name">
+        <button onclick="login()">Log In</button>
+    </div>
+    <div id="main">
+        <button id="post-btn" onclick="postArgument()" class="hidden">Postează o bârfă</button>
+        <div id="arguments"></div>
+    </div>
+
+    <script>
+        let user = localStorage.getItem("user") || "";
+        let argumentsList = JSON.parse(localStorage.getItem("argumentsList")) || [];
+
+        function login() {
+            let username = document.getElementById("username").value.trim();
+            if (username) {
+                user = username;
+                localStorage.setItem("user", user);
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("user-display").textContent = `User: ${user}`;
+                document.getElementById("user-display").classList.remove("hidden");
+                document.getElementById("post-btn").classList.remove("hidden");
+                renderArguments();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("user");
+            user = "";
+            document.getElementById("user-display").classList.add("hidden");
+            document.getElementById("logout-btn").style.display = "none";
+            document.getElementById("login").classList.remove("hidden");
+            document.getElementById("post-btn").classList.add("hidden");
+            renderArguments();
+        }
+
+        function toggleLogout() {
+            let btn = document.getElementById("logout-btn");
+            btn.style.display = btn.style.display === "none" ? "block" : "none";
+        }
+
+        function postArgument() {
+            if (!user) return;
+            let title = prompt("Enter argument title:");
+            let context = prompt("Enter argument context:");
+            if (title && context) {
+                if (title.toLowerCase() === "delete user data" && context.toLowerCase() === "i confirm") {
+                    localStorage.clear();
+                    location.reload();
+                    return;
+                }
+                let arg = { title, context, replies: [] };
+                argumentsList.push(arg);
+                localStorage.setItem("argumentsList", JSON.stringify(argumentsList));
+                renderArguments();
+            }
+        }
+
+        function renderArguments() {
+            let container = document.getElementById("arguments");
+            container.innerHTML = "";
+            argumentsList.forEach((arg, index) => {
+                let div = document.createElement("div");
+                div.className = "argument";
+                div.innerHTML = `<h3>${arg.title}</h3>`;
+                div.onclick = () => showArgument(index);
+                container.appendChild(div);
+            });
+        }
+
+        function showArgument(index) {
+            let arg = argumentsList[index];
+            let details = document.createElement("div");
+            details.innerHTML = `<p>${arg.context}</p>`;
+            let closeBtn = document.createElement("button");
+            closeBtn.textContent = "X";
+            closeBtn.onclick = renderArguments;
+            details.appendChild(closeBtn);
+            
+            if (user) {
+                let replyBox = document.createElement("input");
+                replyBox.placeholder = "Write a reply...";
+                let replyBtn = document.createElement("button");
+                replyBtn.textContent = "Reply";
+                replyBtn.onclick = () => {
+                    if (replyBox.value.trim()) {
+                        arg.replies.push({ user: user, text: replyBox.value.trim() });
+                        localStorage.setItem("argumentsList", JSON.stringify(argumentsList));
+                        showArgument(index);
+                    }
+                };
+                details.appendChild(replyBox);
+                details.appendChild(replyBtn);
+            }
+            
+            let repliesDiv = document.createElement("div");
+            repliesDiv.className = "replies";
+            arg.replies.forEach(rep => {
+                let p = document.createElement("p");
+                p.textContent = `${rep.user}: ${rep.text}`;
+                repliesDiv.appendChild(p);
+            });
+            details.appendChild(repliesDiv);
+            
+            let container = document.getElementById("arguments");
+            container.innerHTML = "";
+            container.appendChild(details);
+        }
+
+        if (user) {
+            document.getElementById("login").classList.add("hidden");
+            document.getElementById("user-display").textContent = `User: ${user}`;
+            document.getElementById("user-display").classList.remove("hidden");
+            document.getElementById("post-btn").classList.remove("hidden");
+        }
+
+        renderArguments();
+    </script>
+</body>
+</html>
