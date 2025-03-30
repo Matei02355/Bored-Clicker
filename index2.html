@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: block;
+            width: 200px;
+            padding: 15px;
+            margin: 10px auto;
+            font-size: 18px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .cash {
+            background-color: #4CAF50;
+        }
+        .cash:hover {
+            background-color: #45a049;
+        }
+        .card {
+            background-color: #008CBA;
+        }
+        .card:hover {
+            background-color: #007bb5;
+        }
+        .mata-mare {
+            background-color: #d9534f;
+        }
+        .mata-mare:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Select Payment Method</h1>
+        <button class="btn cash" onclick="alert('Cash selected')">Cash</button>
+        <button class="btn card" onclick="alert('Card selected')">Card</button>
+        <button class="btn mata-mare" onclick="alert('Mata Mare selected')">Mata Mare</button>
+    </div>
+
+</body>
+</html>
