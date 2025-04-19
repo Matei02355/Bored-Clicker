@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blackjack</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #2e7d32;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .cards {
+      font-size: 1.5em;
+      margin: 10px;
+    }
+    .buttons button {
+      font-size: 1.2em;
+      margin: 5px;
+      padding: 10px 20px;
+    }
+    #status {
+      font-size: 1.2em;
+      margin-top: 15px;
+      height: 2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Blackjack</h1>
+  <div>
+    <h2>Your Hand: <span id="player-hand" class="cards"></span></h2>
+    <h3>Total: <span id="player-total">0</span></h3>
+  </div>
+  <div>
+    <h2>Dealer's Hand: <span id="dealer-hand" class="cards"></span></h2>
+    <h3>Total: <span id="dealer-total">0</span></h3>
+  </div>
+  <div class="buttons">
+    <button onclick="hit()">Hit</button>
+    <button onclick="stand()">Stand</button>
+    <button onclick="startGame()">New Game</button>
+  </div>
+  <div id="status"></div>
+
+  <script>
+    let deck = [];
+    let playerHand = [];
+    let dealerHand = [];
+    let gameOver = false;
+
+    function createDeck() {
+      const suits = ['♠', '♥', '♦', '♣'];
+      const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+      const newDeck = [];
+      for (let suit of suits) {
+        for (let value of values) {
+          newDeck.push({ value, suit });
+        }
+      }
+      return newDeck.sort(() => Math.random() - 0.5);
+    }
+
+    function cardValue(card) {
+      if (['J', 'Q', 'K'].includes(card.value)) return 10;
+      if (card.value === 'A') return 11;
+      return parseInt(card.value);
+    }
+
+    function handTotal(hand) {
+      let total = 0;
+      let aces = 0;
+      for (let card of hand) {
+        total += cardValue(card);
+        if (card.value === 'A') aces++;
+      }
+      while (total > 21 && aces > 0) {
+        total -= 10;
+        aces--;
+      }
+      return total;
+    }
+
+    function updateDisplay() {
+      document.getElementById('player-hand').textContent = playerHand.map(c => `${c.value}${c.suit}`).join(' ');
+      document.getElementById('dealer-hand').textContent = dealerHand.map(c => `${c.value}${c.suit}`).join(' ');
+      document.getElementById('player-total').textContent = handTotal(playerHand);
+      document.getElementById('dealer-total').textContent = handTotal(dealerHand);
+    }
+
+    function startGame() {
+      deck = createDeck();
+      playerHand = [deck.pop(), deck.pop()];
+      dealerHand = [deck.pop(), deck.pop()];
+      gameOver = false;
+      document.getElementById('status').textContent = '';
+      updateDisplay();
+      if (handTotal(playerHand) === 21) {
+        document.getElementById('status').textContent = 'Blackjack! You win!';
+        gameOver = true;
+      }
+    }
+
+    function hit() {
+      if (gameOver) return;
+      playerHand.push(deck.pop());
+      updateDisplay();
+      if (handTotal(playerHand) > 21) {
+        document.getElementById('status').textContent = 'You bust! Dealer wins.';
+        gameOver = true;
+      }
+    }
+
+    function stand() {
+      if (gameOver) return;
+      while (handTotal(dealerHand) < 17) {
+        dealerHand.push(deck.pop());
+      }
+      updateDisplay();
+
+      const playerTotal = handTotal(playerHand);
+      const dealerTotal = handTotal(dealerHand);
+
+      if (dealerTotal > 21) {
+        document.getElementById('status').textContent = 'Dealer busts! You win!';
+      } else if (dealerTotal > playerTotal) {
+        document.getElementById('status').textContent = 'Dealer wins.';
+      } else if (dealerTotal < playerTotal) {
+        document.getElementById('status').textContent = 'You win!';
+      } else {
+        document.getElementById('status').textContent = 'Push (tie).';
+      }
+      gameOver = true;
+    }
+
+    // Start automatically
+    startGame();
+  </script>
+</body>
+</html>
